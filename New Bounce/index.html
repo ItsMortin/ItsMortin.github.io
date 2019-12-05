@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Bouncing Box</title>
+	<script src="jquery.min.js"></script>
+
+<!-- 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+
+	<!-- BEGIN CSS -->
+	<style>
+		/* TODO 1 */
+		.board {
+		    background-color: #1c1b1c;
+		}
+		.box {
+			width: 70px;
+			height: 70px;
+			background-color: #fc03ba;
+			font-size: 300%;
+			text-align: center;
+			display: block;
+			position: absolute;
+			top: 100px;
+			left: 0px;
+		}
+		.arm {
+		    width: 0px;
+		    height: 45px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 111px;
+		    left: 0px;
+		}
+		.arm_left {
+		    width: 20px;
+		    height: 210px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 30px;
+		    left: 0px;
+		}
+		.arm_top {
+		    width: 210px;
+		    height: 20px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 30px;
+		    left: 0px;
+		    transform-origin: 10px 10px;
+		    transform: rotate(180deg);
+		}
+		.arm_bottom {
+		    width: 210px;
+		    height: 20px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 220px;
+		    left: -190px;
+		    transform-origin: 200px 10px;
+		}
+		.arm_right_bottom {
+		    width: 100px;
+		    height: 20px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 220px;
+		    left: -190px;
+		    transform-origin: 90px 10px;
+		}
+		.arm_right_top {
+		    width: 20px;
+		    height: 100px;
+		    background-color: #00ffff;
+		    position: absolute;
+		    top: 30px;
+		    left: 190px;
+		}
+	</style>
+
+</head>
+<body class="board">
+	<!-- HTML for the box -->
+	<div class="box">?</div>
+	<div class="arm"></div>
+	<div class="arm_left"></div>
+	<div class="arm_top"></div>
+	<div class="arm_bottom"></div>
+	<div class="arm_right_bottom"></div>
+	<div class="arm_right_top"></div>
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script>
+		(function(){
+			'use strict';
+			/* global jQuery */
+            
+			// jQuery stuff setup for you
+			var box = jQuery('.box');
+			var arm = jQuery('.arm');
+			var board = jQuery('.board');
+			var boardWidth = jQuery('.board').width();
+			var boxWidth = jQuery('.box').width();
+			var armExtend = jQuery('.arm').width();
+			var armLeft = jQuery('.arm_left');
+			var armBottom = jQuery(".arm_bottom");
+			var armTop = jQuery(".arm_top");
+			var armRightTop = jQuery(".arm_right_top");
+			var armRightBottom = jQuery(".arm_right_bottom");
+			//var armBottom = jQuery('arm_bottom').transform(rotate: {})
+			
+			// TODO 2 - Variable declarations 
+			var boxPosition;        //reference for the x-coordinates of our box
+			var points;          //reference for enumbers on box
+			var speed;           //reference for how fast the box moves
+			var direction;       //reference for direction of movement: 1 means right, -1 means left.
+			var prevSpeed;      //saves Speed before click
+			var armExtention;
+			var boxMotion;
+			var boxClick;
+			var boxLeft;
+			var boxRight;
+			var rotateInterval;
+			var topBotRot;
+			var deg;
+			var degT;
+			var degRB;
+			var botRotXCord;
+			
+			boxPosition = 0;
+			points = 0;
+			speed = 10;
+			direction = -1;
+			deg = 0;
+			degT = 180;
+			degRB = 0;
+            armTop.css('transform', 'rotate(' + degT + 'deg)');
+            botRotXCord = armExtend - 10;
+	        //Some jQuery
+	        
+	        box.css('left',boxPosition);  // moves the box to the x-coordinate of <position> 
+	        box.text(points);          // changes the text of the box to display the value of <points>
+	        
+            
+            
+			
+		    function update() {
+			// TODO 3 / 6 / 7 / 8
+    			boxPosition += speed;    // increment position by speed on every update
+                //console.log("new position: " + boxPosition);
+                box.css('left', boxPosition);      // set the 'left' CSS property of the box to the new value of position
+                if((boxPosition + boxWidth) > boardWidth) {
+    			     speed = speed * direction;
+    		    }
+    
+    			if(boxPosition < 0) {
+    			     speed = speed * direction;
+                }
+                if(armExtend === 0) {
+                    
+                }
+            }
+
+			/*function handleBoxClick() {            //ingore this for now
+				// TODO 4 / 5
+            points = points + 1;
+            box.text(points);      // updates points to display
+            if(speed > 0) {
+                speed += 1;
+            } else {
+                speed += -1; 
+			}
+	        }
+	        */
+	        
+	        boxClick = box.on('click', armInterval);
+	        
+	        function Check() {
+                if(deg < -180) {
+    	            deg = -180;
+    	            armBottom.css('transform', 'rotate(' + deg + 'deg)');
+                    degT = 0;
+                    armTop.css('transform', 'rotate(' + degT + 'deg)');
+    	            clearInterval(Check);
+    	            console.log('pizza');
+    	        }
+	        }
+	        
+	        function armInterval() {
+    	        if(armExtend === 0) {
+    	            prevSpeed = speed;
+    	            armExtention = setInterval(armExtending, 8);
+    	            rotateInterval = setInterval(IfRotate,8);
+    	            
+    	        }
+	        }
+	        
+            function armExtending() {
+                armExtend += 10;
+                boxLeft = armExtend - 20;
+                boxRight = boxLeft + 190;
+                arm.css('width',boxLeft);
+                armLeft.css('left',boxLeft);
+                armBottom.css('left',armExtend - 210);
+                armTop.css('left',boxLeft);
+                armRightTop.css('left',boxRight);
+                speed = speed / 1.06;
+                
+    	        if(armExtend === boxPosition - 50) {
+    	            clearInterval(armExtention);
+    	            clearInterval(boxMotion);
+                    speed = 0;
+                }
+                
+                if(armExtend > boxPosition - 50) {
+                    armExtend = boxPosition - 50;
+                }
+            }
+            
+            function IfRotate() {
+                if(armExtend !== 0) {
+                    if(armExtend > boxPosition - 500) {
+                        topBotRot = setInterval(Rotate, 8);
+                        clearInterval(rotateInterval);
+                    }
+                }
+            }
+
+            
+            // what the function does, how you use it.
+            function Rotate() {
+                deg += -3;
+                armBottom.css('transform', 'rotate(' + deg + 'deg)');
+                    
+                if(deg === -180) {
+                    clearInterval(topBotRot);
+                    setInterval(Check);
+                    deg = -180;
+                    armRightBottom.css('left',boxRight - 80);
+                    setInterval(RotateRight,2);
+                }
+                
+                degT += 3;
+                armTop.css('transform', 'rotate(' + degT + 'deg)');
+             
+                if(degT === 0) {
+                    degT = 0;
+                }
+            }
+
+            
+            function RotateRight() {
+                degRB += -3;
+                armRightBottom.css('transform', 'rotate(' + degRB + 'deg)');
+                armRightBottom.css('left',boxRight - 80);
+             }
+
+			//this executes the update function code every 20 milliseconds
+	        boxMotion = setInterval(update, 20);
+			
+			// this executes the armInterval function code every time the box is clicked on
+		})();
+	</script>
+</body>
+</html>

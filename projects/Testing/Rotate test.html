@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Rotate it</title>
+	<script src="jquery.min.js"></script>
+    <style>
+		/* TODO 1 */
+		.board {
+		    background-color: #1c1b1c;
+		}
+		.box {
+			width: 20px;
+			height: 200px;
+			background-color: #fc03ba;
+			font-size: 300%;
+			text-align: center;
+			display: block;
+			position: absolute;
+			top: 200px;
+			left: 200px;
+			transform-origin: 10, 10;
+		}
+
+	</style>
+</head>
+<body>
+	<!-- HTML for the box -->
+	<div class="box"></div>
+	<div class="button"></div>
+	<script>
+        (function(){
+			'use strict';
+			/* global jQuery */
+            
+			// jQuery stuff setup for you
+	        var box = jQuery('.box');
+	        var boxWidth = jQuery('.box').width();
+	        //var deg;
+	        var direction = 6;
+	        var degree = 1;
+	        var deg;
+	        
+	        setInterval(BoxStretch,20);
+	        
+	        
+	        
+	        function BoxStretch() {
+	            boxWidth += direction;
+	            box.css('width',boxWidth);
+	            if(boxWidth > 400) {
+	                direction = -6;
+	                Rotate(degree += 1);
+	            } else if(boxWidth < 0){
+	                direction = 1;
+	            }
+	        }
+
+
+            /*function Rotate() {
+            deg += 1;
+            box.css({'transform' : 'rotate('+ deg +'deg)'});
+            return box;
+            }
+            })(); 
+            */
+           
+           
+            function Rotate() {
+            box.animate({  borderSpacing: 180 }, {
+                step: function(deg) {
+                deg += 3;
+                box.css('transform','rotate('+deg+'deg)');
+                },
+                duration: 6000
+            },'linear')();
+            setInterval(RotationAssistance,20);
+            }
+            
+            
+            
+            })();
+
+	</script>
+</body>
+</html>
